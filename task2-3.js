@@ -1,0 +1,1 @@
+process.stdout.write('Message from child3\n');
