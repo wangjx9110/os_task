@@ -1,28 +1,28 @@
 (function(global, undefined) {
     
-    var PROCESS = {
-        0: {
+    var PROCESS = { //0号进程PCB
+            existPid: { 0: PROCESS },   //用于标识已存在PID和快速存取PCB
             pid: 0,
-            childProcess: []
-        }
+            childProcess: []    //用于存储进程
     };
 
     function PCB(pid, ppid, uid) {
         
         this.childProcess = [];
 
-        if (PROCESS[pid]) {
+        if (PROCESS.existPid[pid]) {    //pid已存在, 冲突
             throw 'PID:' + pid + 'conflict.';
             return;
-        } else {
-            this.pid = pid;
-            PROCESS[pid] = this;    //添加到PROCESS加快存取
+        } else if (!PROCESS.existPid[ppid]) {    //ppid不存在, 无法创建
+            throw 'PPID:' + ppid + 'doesn\'t exist.';
+        } else {    //pid不存在, ppid存在
+            existPid
         }
 
         if (PROCESS[ppid]) {
-            PROCESS[ppid].childProcess.push(this);  //构造树结构
+            PROCESS[ppid].childProcess.push(this);
         } else {
-            throw 'PPID:' + ppid + 'doesn\'t exist.';
+            
         }
 
         this.ppid = ppid;
@@ -50,16 +50,13 @@
     var p10 = new PCB(10, 8, 1);
 
     function triverse(item, childName) {
-        console.log('NOW: ' + item.pid);
+        console.log(item.pid);
         if (item[childName].length === 0) {
             return;
         } else {
             for (var i = 0, len = item[childName].length; i < len; i++) {
-                triverse(item[childName][i], childName);
+                triverse(item[childName], childName);
             }
         }
     }
-
-    console.log('深度遍历DFS: ');
-    triverse(PROCESS['0'], 'childProcess');
 })(this);
